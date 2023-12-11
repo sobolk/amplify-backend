@@ -2,6 +2,8 @@ import { UsageStatements, UsageStatementsGenerator } from './types.js';
 import ts from 'typescript';
 import { EOL } from 'os';
 
+const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
+
 /**
  * This class generates generic type declaration.
  *
@@ -103,7 +105,7 @@ export class ImportUsageStatementsGenerator
   constructor(private readonly node: ts.ImportDeclaration) {}
   generate = (): UsageStatements => {
     return {
-      importStatement: this.node.getText(),
+      importStatement: printer.printNode(ts.EmitHint.Unspecified, this.node),
     };
   };
 }
@@ -146,10 +148,59 @@ export class TypeUsageStatementsGenerator implements UsageStatementsGenerator {
     const functionParameterName = `${constName}FunctionParameter`;
     // declare type with same content under different name.
     let usageStatement = `type ${baselineTypeName}${genericTypeParametersDeclaration} = ${this.typeAliasDeclaration.type.getText()}${EOL}`;
+    const baselineTypeStatement = ts.factory.createTypeAliasDeclaration(
+      undefined,
+      baselineTypeName,
+      this.typeAliasDeclaration.typeParameters,
+      this.typeAliasDeclaration.type
+    );
+    const usageFunctionStatement = ts.factory.createVariableStatement(
+      undefined,
+      [
+        ts.factory.createVariableDeclaration(
+          constName,
+          undefined,
+          undefined,
+          ts.factory.createArrowFunction(
+            undefined,
+            undefined,
+            [
+              ts.factory.createParameterDeclaration(
+                undefined,
+                undefined,
+                functionParameterName,
+                undefined,
+                ts.factory.createTypeReferenceNode(baselineTypeName, this.typeAliasDeclaration.typeParameters),
+                undefined
+              ),
+            ],
+            undefined,
+            undefined,
+            ts.factory.createBlock(
+              [
+                ts.factory.createVariableStatement(undefined, [
+                  ts.factory.createVariableDeclaration(
+                    constName,
+                    undefined,
+                    ts.factory.createTypeReferenceNode(typeName),
+                    ts.factory.createIdentifier(functionParameterName)
+                  ),
+                ]),
+              ],
+              true
+            )
+          )
+        ),
+      ]
+    );
     // add statement that checks if old type can be assigned to new type.
     usageStatement += `const ${typeName}UsageFunction = (${functionParameterName}: ${baselineTypeName}${genericTypeParameters}) => {${EOL}`;
     usageStatement += `    const ${constName}: ${typeName}${genericTypeParameters} = ${functionParameterName};${EOL}`;
     usageStatement += `}${EOL}`;
+    usageStatement = printer.printNode(
+      ts.EmitHint.Unspecified,
+      ts.factory.createBlock([baselineTypeStatement, usageFunctionStatement])
+    );
     return {
       importStatement: `import { ${typeName} } from '${this.packageName}';`,
       usageStatement: usageStatement,

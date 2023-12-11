@@ -46,10 +46,10 @@ someEnumUsageVariable = SomeEnum.SOME_MEMBER;
   {
     description: 'generates import statement usage',
     apiReportCode: `
-import { SomeType } from 'some-package';
+import { SomeType } from "some-package";
     `,
     expectedApiUsage: `
-import { SomeType } from 'some-package';
+import { SomeType } from "some-package";
     `,
   },
   {
@@ -91,6 +91,7 @@ void describe('Api usage generator', () => {
         'samplePackageName',
         apiReportAST
       ).generate();
+      console.log(apiUsage);
       assert.strictEqual(apiUsage.trim(), testCase.expectedApiUsage.trim());
     });
   }
