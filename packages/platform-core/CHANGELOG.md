@@ -1,5 +1,12 @@
 # @aws-amplify/platform-core
 
+## 1.3.1
+
+### Patch Changes
+
+- 95942c5: expand wrapping of credentials related errors
+- f679cf6: expand handling of getaddrinfo ENOTFOUND errors
+
 ## 1.3.0
 
 ### Minor Changes
