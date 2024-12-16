@@ -108,14 +108,14 @@ jobs:
           # Build JSON array in readable way in bash...
           os='["ubuntu-latest"'
           os_for_e2e='["ubuntu-latest"'
-#          if [ "${{ inputs.include-macos }}" != "false" ]; then
-#            os+=', "macos-14"'
-#            os_for_e2e+=', "macos-14-xlarge"'
-#          fi
-#          if [ "${{ inputs.include-windows }}" != "false" ]; then
-#            os+=', "windows-latest"'
-#            os_for_e2e+=', "windows-latest"'
-#          fi
+          # if [ "${{ inputs.include-macos }}" != "false" ]; then
+          #   os+=', "macos-14"'
+          #   os_for_e2e+=', "macos-14-xlarge"'
+          # fi
+          # if [ "${{ inputs.include-windows }}" != "false" ]; then
+          #   os+=', "windows-latest"'
+          #   os_for_e2e+=', "windows-latest"'
+          # fi
           os+=']'
           os_for_e2e+=']'
           echo "os=$os" >> "$GITHUB_OUTPUT"
