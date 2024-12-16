@@ -756,16 +756,16 @@ jobs:
           cdk-version: ${{ needs.resolve_inputs.outputs.cdk_version }}
       - id: is_version_packages_commit
         run: echo "is_version_packages_commit=$(npx tsx scripts/is_version_packages_commit.ts)" >> "$GITHUB_OUTPUT"
-      - name: Publish packages
-        # if this push is merging a version packages PR, then we publish the new versions
-        if: ${{ steps.is_version_packages_commit.outputs.is_version_packages_commit == 'true' }}
-        id: changeset_publish
-        uses: changesets/action@aba318e9165b45b7948c60273e0b72fce0a64eb9 # version 1.4.7
-        with:
-          publish: npm run publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+#      - name: Publish packages
+#        # if this push is merging a version packages PR, then we publish the new versions
+#        if: ${{ steps.is_version_packages_commit.outputs.is_version_packages_commit == 'true' }}
+#        id: changeset_publish
+#        uses: changesets/action@aba318e9165b45b7948c60273e0b72fce0a64eb9 # version 1.4.7
+#        with:
+#          publish: npm run publish
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Update hotfix branch
         if: ${{ steps.changeset_publish.outputs.published == 'true' && github.ref_name == 'main' }}
         run: git push origin main:hotfix --force
