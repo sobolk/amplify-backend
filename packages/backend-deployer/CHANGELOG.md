@@ -1,5 +1,15 @@
 # @aws-amplify/backend-deployer
 
+## 1.1.12
+
+### Patch Changes
+
+- dedcc27: add error mapping for role is invalid or cannot be assumed error'
+- 95942c5: expand wrapping of credentials related errors
+- Updated dependencies [95942c5]
+- Updated dependencies [f679cf6]
+  - @aws-amplify/platform-core@1.3.1
+
 ## 1.1.11
 
 ### Patch Changes
