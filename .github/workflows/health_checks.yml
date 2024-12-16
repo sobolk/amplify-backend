@@ -78,7 +78,7 @@ on:
         description: 'Node versions list (as JSON array).'
         required: false
         type: string
-        default: '["18"]'
+        default: '["20"]'
 
 env:
   # Health checks can run on un-released code. Often work in progress.
